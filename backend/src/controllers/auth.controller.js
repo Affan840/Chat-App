@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    
+
     if (password.length < 6) {
       return res
         .status(400)
@@ -32,14 +32,12 @@ export const signup = async (req, res) => {
     if (newUser) {
       await generateToken(newUser._id, res);
       await newUser.save();
-      return res
-        .status(201)
-        .json({
-          _id: newUser._id,
-          fullName: newUser.fullName,
-          email: newUser.email,
-          profilePic: newUser.profilePic,
-        });
+      return res.status(201).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilePic: newUser.profilePic,
+      });
     } else {
       return res.status(400).json({ message: "Invalid user data" });
     }
@@ -49,6 +47,46 @@ export const signup = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {};
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-export const logout = (req, res) => {};
+    await generateToken(user._id, res);
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("Error in login:", error.message);
+    res.status(500).json({ message: "Internal Server error" });
+  }
+};
+
+export const logout = (req, res) => {
+  try {
+    res.cookie("jwt", "", {
+      maxAge: 0,
+    });
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log("Error in logout:", error.message);
+    res.status(500).json({ message: "Internal Server error" });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  
+};

@@ -6,7 +6,7 @@ A full-stack real-time chat application that allows users to sign up, log in, an
 
 ## Live Demo
 
-[Live URL](https://your-live-chat-app-url.com)
+[Live URL](https://chat-app-frontend-d63jvk1ha-affan840s-projects.vercel.app)
 
 **Thumbnail:**
 

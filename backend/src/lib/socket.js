@@ -7,33 +7,30 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
+    origin: ["http://localhost:5173"],
   },
 });
 
-// store userId -> socketId
-const usersSocketMap = {};
-
-export function getSocketReceiverId(userId) {
-  return usersSocketMap[userId];
+export function getReceiverSocketId(userId) {
+  return userSocketMap[userId];
 }
 
+// used to store online users
+const userSocketMap = {}; // {userId: socketId}
+
 io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+  console.log("A user connected", socket.id);
 
   const userId = socket.handshake.query.userId;
-  if (userId) {
-    usersSocketMap[userId] = socket.id;
-    console.log("User connected:", userId);
-  }
+  if (userId) userSocketMap[userId] = socket.id;
 
-  io.emit("getOnlineUsers", Object.keys(usersSocketMap));
+  // io.emit() is used to send events to all the connected clients
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-    delete usersSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(usersSocketMap));
+    console.log("A user disconnected", socket.id);
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 

@@ -1,10 +1,13 @@
 #!/bin/bash
+set -e  # stop script if a command fails
 
-# Move into the backend folder
+echo "🚀 Starting deployment..."
+
+# Move into backend folder
 cd backend
 
-# Install dependencies
-npm install
+echo "📦 Installing dependencies..."
+npm install --production
 
-# Start the backend server
+echo "▶️ Starting backend server..."
 npm run start

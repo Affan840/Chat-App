@@ -6,7 +6,7 @@ A full-stack real-time chat application that allows users to sign up, log in, an
 
 ## Live Demo
 
-[Live URL](https://chat-app-frontend-d63jvk1ha-affan840s-projects.vercel.app)
+[Live URL](https://chat-app-mrvk.vercel.app)
 
 **Thumbnail:**
 
@@ -116,7 +116,8 @@ FRONTEND_URL=http://localhost:5173
 
 ### Frontend (`frontend/.env`)
 ```
-VITE_API_URL=http://localhost:5001
+VITE_API_URL=http://localhost:5001/api
+VITE_SOCKET_URL=http://localhost:5001
 ```
 
 ---
